@@ -1,8 +1,6 @@
 package com.example.zlyy.service.impl;
 
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.zlyy.common.Question;
-import com.example.zlyy.dto.PyModel;
 import com.example.zlyy.dto.R;
 import com.example.zlyy.entity.*;
 import com.example.zlyy.service.QuestionnaireService;
@@ -56,103 +54,12 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     };
 
     
-    @Resource
-    private PyModel pyModel;
     
-//    private Map<String, Integer> setAndGetTitle2QidMap() {
-//        return new HashMap<String, Integer>() {
-//            {
-//                // userInfo 别map和checked了, 提前知道哪些需要
-//
-//                put("sex", 0);
-//                put("birthYear", 1);
-//                put("durable", 2);
-//                
-//                // A B C D E F
-//                put("A01", 3);
-//                put("A02", 4);
-//                put("A03", 5);
-//                put("A04", 6);
-//                put("A05", 7);
-//                put("A06", 8);
-//                put("A07", 9);
-//                put("B01", 10);
-//                put("B0201", 11);
-//                put("B0202", 12);
-//                put("B0203", 13);
-//                put("B0204", 14);
-//                put("B0205", 15);
-//                put("B0206", 16);
-//                put("B03", 17);
-//                put("B04", 18);
-//                put("B0402", 19);
-//                put("B0403", 20);
-//                put("B0404", 21);
-//                put("B0405", 22);
-//                put("B0406", 23);
-//                put("B05", 24);
-//                put("C01", 25);
-//                put("C02", 26);
-//                put("C0201", 27);
-//                put("C0202", 28);
-//                put("C0203", 29);
-//                put("C03", 30);
-//                put("C0301", 31);
-//                put("C04", 32);
-//                
-//                put("C0401", 33);
-//                put("C0402", 34);
-//                put("C0403", 35);
-//                put("C0404", 36);
-//                put("C0405", 37);
-//                put("C0406", 38);
-//                
-//                put("C05", 39);
-//                put("C06", 40);
-//                put("C07", 41);
-//                put("C08", 42);
-//                put("C09", 43);
-//                put("C10", 44);
-//                put("C11", 45);
-//                put("D01", 46);
-//                put("D0201", 47);
-//                
-//                put("D0202Map", 48);
-//
-//                put("D03", 58);
-//                
-//                put("D04Map", 59);
-//
-//                put("E01", 64);
-//                
-//                put("E0101Map", 65);
-//                put("E0102Map", 71);
-//
-//                put("E02", 79);
-//                
-//                put("E0201Map", 80);
-//                put("E0202Map", 86);
-//
-//                put("F01", 96);
-//                
-//                put("F0101Map", 97);
-//
-//                put("F0102", 104);
-//                put("F02", 105);
-//                put("F0201", 106);
-//                put("F0202", 107);
-//                put("F03", 108);
-//            }
-//        };
-//    }
-    
-//    private Map<String, Integer> tile2QidMap = setAndGetTitle2QidMap();
-
-    private Map<String, Integer> tile2QidMap;
+    private Map<String, Integer> title2QidMap;
 
     {
         try {
-            tile2QidMap = (Map<String, Integer>) MapBuilder.build(keys, values);
+            title2QidMap = (Map<String, Integer>) MapBuilder.build(keys, values);
         } catch (Exception e) {
             logger.error("map build error: {}", e);
             e.printStackTrace();
@@ -169,7 +76,7 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     ) {
 
 
-        // TODO: userInfo
+        // userInfo
         List<Field> fields1 = Arrays.stream(userInfo.getClass().getDeclaredFields()).filter(f -> {
             String name = f.getName();
             return !"id".equals(name) && !"serialVersionUID".equals(name);
@@ -197,7 +104,7 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
                             intValue = Integer.valueOf(o.toString());
                         }
                         try {
-                            int indexValue = tile2QidMap.get(fieldName);
+                            int indexValue = title2QidMap.get(fieldName);
                             try {
                                 inputList[indexValue] = intValue;
                             } catch (IllegalArgumentException e) {
@@ -225,7 +132,6 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
         
         // A B C D E F
         // 反射获取属性列表
-//        Object[] objs = new Object[] {questionA, questionB, questionC, questionD, questionE, questionF};
         
         serveSingleQuestion(questionA);
         serveSingleQuestion(questionB);
@@ -235,53 +141,10 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
         serveSingleQuestion(questionE);
         serveSingleQuestion(questionF);
         
-//        for (Object obj : objs) {
-//            List<Field> fields2 = Arrays.stream(obj.getClass().getDeclaredFields()).filter(f -> {
-//                String name = f.getName();
-//                return !"id".equals(name) && !"serialVersionUID".equals(name);
-//            }).collect(Collectors.toList());
-//
-//            for (Field field : fields2) {
-//                try {
-//                    PropertyDescriptor descriptor = new PropertyDescriptor(field.getName(), obj.getClass());
-//                    Method readMethod = descriptor.getReadMethod();
-//                    String fieldName = descriptor.getName();
-//                    
-//                    try {
-//                        Object o = readMethod.invoke(obj);
-//                        // mapping
-//                        try {
-//                            Integer intValue = Integer.valueOf(o.toString());
-//                            try {
-//                                int indexValue = tile2QidMap.get(fieldName);
-//                                try {
-//                                    inputList[indexValue] = intValue;
-//                                } catch (IllegalArgumentException e) {
-//                                    logger.error("illegal index error: " + e.getMessage(), e);
-//                                    e.printStackTrace();
-//                                }
-//                            } catch (IllegalArgumentException e) {
-//                                logger.error("hashmap get error: " + e.getMessage(), e);
-//                                e.printStackTrace();
-//                            }
-//                        } catch (Exception e) {
-//                            logger.error("entity get method error: " + e.getMessage(), e);
-//                            e.printStackTrace();
-//                        }
-//                    } catch (InvocationTargetException e) {
-//                        logger.error("invoke error: " + e.getMessage(), e);
-//                        e.printStackTrace();
-//                    }
-//                    
-//                    
-//                } catch (IntrospectionException | IllegalAccessException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        }
         
-
-        // check-box
+        
+        
+        
         List<Field> fields3 = Arrays.stream(multiOptionQuestion.getClass().getDeclaredFields()).filter(f -> {
             String name = f.getName();
             //过滤掉不需要修改的属性
@@ -309,7 +172,7 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
                     // mapping
                     String fieldName = descriptor.getName();
                     try {
-                        int indexValue = tile2QidMap.get(fieldName);
+                        int indexValue = title2QidMap.get(fieldName);
                         for (int i = 0; i < optionNum; i++) {
                             inputList[indexValue + i] = intValues[i];
                         }
@@ -346,8 +209,7 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
 
         Double finalDoubleModelRes = doubleModelRes;
         
-        pyModel.setValue(finalDoubleModelRes);
-        return R.ok().put("modelRes", pyModel.getValue());
+        return R.ok().put("modelRes", doubleModelRes);
         
     }
 
@@ -387,7 +249,7 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
                             intValue = Integer.valueOf(o.toString());
                         }
                         try {
-                            int indexValue = tile2QidMap.get(fieldName);
+                            int indexValue = title2QidMap.get(fieldName);
                             try {
                                 inputList[indexValue] = intValue;
                             } catch (IllegalArgumentException e) {

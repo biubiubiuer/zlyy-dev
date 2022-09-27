@@ -3,6 +3,7 @@ package com.example.zlyy.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -39,5 +40,8 @@ public class UserInfo implements Serializable {
     private String idCard;
 
     private Integer hospital;
+    
+    @JsonIgnore
+    private Double stmPoss;
 
 }

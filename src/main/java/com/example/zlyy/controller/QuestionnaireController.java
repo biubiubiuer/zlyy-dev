@@ -4,6 +4,7 @@ import com.example.zlyy.annotation.MultiRequestBody;
 import com.example.zlyy.dto.R;
 import com.example.zlyy.entity.*;
 import com.example.zlyy.service.QuestionnaireService;
+import com.example.zlyy.service.UserInfoService;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +25,9 @@ public class QuestionnaireController {
 
     @Resource
     private QuestionnaireService questionnaireService;
+    
+    @Resource
+    private UserInfoService userInfoService;
 
 
     @PostMapping(value = "/update", produces={"application/json;charset=UTF-8", "text/xml;charset=UTF-8", "text/html;charset=UTF-8"})
@@ -33,13 +37,18 @@ public class QuestionnaireController {
             @MultiRequestBody UserInfo userInfo,
             @MultiRequestBody QuestionA questionA, @MultiRequestBody QuestionB questionB, @MultiRequestBody QuestionC questionC,
             @MultiRequestBody QuestionD questionD, @MultiRequestBody QuestionE questionE, @MultiRequestBody QuestionF questionF,
-            @MultiRequestBody MultiOptionQuestion multiOptionQuestion)  {
+            @MultiRequestBody MultiOptionQuestion multiOptionQuestion) throws Exception {
 
 
-        return questionnaireService.updateQuestionnaire(
+        R r = questionnaireService.updateQuestionnaire(
                 userInfo, questionA, questionB, questionC, questionD, questionE, questionF, multiOptionQuestion
         );
 
+        userInfo.setStmPoss((Double) r.get("modelRes"));
+
+        userInfoService.saveUserInfo(userInfo);
+        
+        return r;
     }
 
 
