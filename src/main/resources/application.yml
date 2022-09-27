@@ -1,13 +1,26 @@
 server:
-  port: 8083
+  port: 443
+  ssl:
+    key-store: classpath:biubiubiuer_zlyy-dev_xyz.jks
+    key-store-password: OzhNIrN9727hO9I6
+    key-store-type: JKS
+
+  
+  
+#swsk33: # https://juejin.cn/post/6989106629111185438 http -> https
+#  server:
+#    enablehttps: true
+
 spring:
   application:
     name: zlyy
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3336/zlyy?useSSL=false&serverTimezone=UTC
+#    url: jdbc:mysql://175.178.242.121:3336/zlyy?useSSL=false&serverTimezone=UTC
+    url: jdbc:mysql://localhost:3306/zlyy?useSSL=false&serverTimezone=UTC
+    
     username: root
-    password: zlyy-biubiubiuer
+    password: Asdzxc2222
   jackson:
     default-property-inclusion: non_null
 mybatis-plus:
