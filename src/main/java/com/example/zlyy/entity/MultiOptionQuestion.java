@@ -26,35 +26,6 @@ public class MultiOptionQuestion implements Serializable {
 
     private Map<String, Object> D04Map;
     private Map<String, Object> D0202Map;
-
-    public Map<String, Object> getD04Map() {
-        return D04Map;
-    }
-
-    public Map<String, Object> getD0202Map() {
-        return D0202Map;
-    }
-
-    public Map<String, Object> getE0101Map() {
-        return E0101Map;
-    }
-
-    public Map<String, Object> getE0102Map() {
-        return E0102Map;
-    }
-
-    public Map<String, Object> getE0201Map() {
-        return E0201Map;
-    }
-
-    public Map<String, Object> getE0202Map() {
-        return E0202Map;
-    }
-
-    public Map<String, Object> getF0101Map() {
-        return F0101Map;
-    }
-
     private Map<String, Object> E0101Map;
     private Map<String, Object> E0102Map;
     private Map<String, Object> E0201Map;
