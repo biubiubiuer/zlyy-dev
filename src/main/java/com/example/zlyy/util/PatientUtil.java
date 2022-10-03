@@ -1,19 +1,17 @@
 package com.example.zlyy.util;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.math3.analysis.function.Add;
-import reactor.util.annotation.Nullable;
 
 import java.util.List;
 import java.util.Map;
 
 public class PatientUtil {
-    public static String parseNation(Integer nation) {
+    public static String parseNation(String nation) {
         switch (nation) {
-            case 0: return "汉族";
-            case 1: return "彝族";
-            case 2: return "藏族";
-            case 3: return "羌族";
+            case "0": return "汉族";
+            case "1": return "彝族";
+            case "2": return "藏族";
+            case "3": return "羌族";
             default: return "其他";
         }
     }
@@ -44,12 +42,12 @@ public class PatientUtil {
         return "无";
     }
 
-    public static String parseBloodType(Integer a04) {
+    public static String parseBloodType(String a04) {
         switch (a04) {
-            case 1: return "O";
-            case 2: return "A";
-            case 3: return "B";
-            case 4: return "AB";
+            case "1": return "O";
+            case "2": return "A";
+            case "3": return "B";
+            case "4": return "AB";
             default: return "其他";
         }
     }

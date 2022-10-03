@@ -1,7 +1,8 @@
 package com.example.zlyy.controller;
 
-import com.example.zlyy.dto.R;
-import com.example.zlyy.service.PatientDTOService;
+import com.example.zlyy.annotation.NoAuth;
+import com.example.zlyy.common.R;
+import com.example.zlyy.service.PatientService;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,12 +22,12 @@ public class PatientInfoController {
     private static final Logger logger = LoggerFactory.getLogger(PatientInfoController.class);
 
     @Resource
-    private PatientDTOService patientDtoService;
+    private PatientService patientService;
 
+    @NoAuth
     @PostMapping(value = "/list", produces={"application/json;charset=UTF-8"})
-    @ResponseBody
     public R getAllPatients() {
-        return patientDtoService.getPatientListByName();
+        return patientService.getPatientListByName();
     }
     
 }

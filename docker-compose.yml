@@ -1,0 +1,41 @@
+version: "3"
+services:
+
+  mysql:
+    restart: always
+    image: mysql:8.0.23
+    container_name: zlyy-mysql
+    security_opt:
+      - seccomp:unconfined
+    privileged: true
+    volumes:
+      - /usr/local/docker/zlyy-mysql/data/:/var/lib/mysql/
+      - /usr/local/docker/zlyy-mysql/conf/:/etc/mysql/conf.d/
+      - /usr/local/docker/zlyy-mysql/init/:/docker-entrypoint-initdb.d/
+    environment:
+      MYSQL_ROOT_PASSWORD: zlyy-biubiubiuer
+      MYSQL_USER: biubiubiuer
+      MYSQL_PASS: zlyy-biubiubiuer
+      TZ: Asia/Shanghai
+    command:
+      --default-authentication-plugin=mysql_native_password
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_general_ci
+      --explicit_defaults_for_timestamp=true
+      --lower_case_table_names=1
+    ports:
+      - '3336:3306'
+
+  redis:
+    image: redis:6
+    restart: always
+    container_name: zlyy-redis
+    volumes:
+      - /usr/local/docker/zlyy-redis/datadir:/data
+      - /usr/local/docker/zlyy-redis/conf/redis.conf:/usr/local/etc/redis/redis.conf
+      - /usr/local/docker/zlyy-redis/logs:/logs
+    command:
+      redis-server /usr/local/etc/redis/redis.conf
+    ports:
+      - '6399:6379'
+

@@ -1,15 +1,15 @@
 package com.example.zlyy.controller;
 
 import com.example.zlyy.annotation.MultiRequestBody;
-import com.example.zlyy.dto.PatientDTO;
-import com.example.zlyy.dto.R;
-import com.example.zlyy.entity.*;
-import com.example.zlyy.service.PatientDTOService;
+import com.example.zlyy.annotation.NoAuth;
+import com.example.zlyy.pojo.bo.*;
+import com.example.zlyy.common.R;
+import com.example.zlyy.pojo.*;
+import com.example.zlyy.service.PatientService;
 import com.example.zlyy.service.QuestionAService;
 import com.example.zlyy.service.QuestionnaireService;
-import com.example.zlyy.service.UserInfoService;
+import com.example.zlyy.service.QUserInfoService;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.catalina.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,36 +33,41 @@ public class QuestionnaireController {
     private QuestionnaireService questionnaireService;
     
     @Resource
-    private UserInfoService userInfoService;
+    private QUserInfoService QUserInfoService;
     
     @Resource
     private QuestionAService questionAService;
     
     @Resource
-    private PatientDTOService patientDTOService;
+    private PatientService patientService;
 
 
+//    @NoAuth
     @PostMapping(value = "/update", produces={"application/json;charset=UTF-8"})
     @ResponseBody
     public R saveQuestionnaire(
-            @MultiRequestBody UserInfo userInfo,
+            @MultiRequestBody QUserInfo qUserInfo,
             @MultiRequestBody QuestionA questionA, @MultiRequestBody QuestionB questionB, @MultiRequestBody QuestionC questionC,
             @MultiRequestBody QuestionD questionD, @MultiRequestBody QuestionE questionE, @MultiRequestBody QuestionF questionF,
             @MultiRequestBody MultiOptionQuestion multiOptionQuestion) throws Exception {
 
 
         R r = questionnaireService.updateQuestionnaire(
-                userInfo, questionA, questionB, questionC, questionD, questionE, questionF, multiOptionQuestion
+                qUserInfo, questionA, questionB, questionC, questionD, questionE, questionF, multiOptionQuestion
         );
         
-        if (r.get("msg") == "success") {
+        if ("success".equals(r.get("msg"))) {
 
-            userInfo.setStmPoss((Double) r.get("modelRes"));
+            qUserInfo.setStmPoss(String.valueOf(r.get("modelRes")));
+            
+            Patient patient = new Patient();
+            
+//            PatientDTO patientDTO = new PatientDTO();
 
-            PatientDTO patientDTO = new PatientDTO();
-
-            if (submitPatientDTO(userInfo, questionA, patientDTO)) {
-                patientDTOService.submitPatientInfo(patientDTO);
+            if (getInfoAndQAThenSetPatient(qUserInfo, questionA, patient)) {
+                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                String time = df.format(System.currentTimeMillis());
+                patientService.submitPatientInfo(patient, time);
             }
         }
         
@@ -72,12 +77,11 @@ public class QuestionnaireController {
 
 
     @Transactional(rollbackFor = Exception.class)
-    public Boolean submitPatientDTO(UserInfo userInfo, QuestionA questionA, PatientDTO patientDTO) throws Exception {
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    public Boolean getInfoAndQAThenSetPatient(QUserInfo QUserInfo, QuestionA questionA, Patient patient) throws Exception {
+        
         try {
-            userInfoService.submitUserInfo(userInfo, patientDTO);
-            questionAService.submitQuestionA(questionA, patientDTO);
-            patientDTO.setTime(df.format(System.currentTimeMillis()));
+            QUserInfoService.getInfoThenSetPatient(QUserInfo, patient);
+            questionAService.getQAThenSetPatient(questionA, patient);
             return true;
         } catch (Exception e) {
             

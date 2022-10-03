@@ -1,13 +1,11 @@
 package com.example.zlyy.service;
 
-import com.baomidou.mybatisplus.extension.service.IService;
-import com.example.zlyy.common.Question;
-import com.example.zlyy.dto.R;
-import com.example.zlyy.entity.*;
+import com.example.zlyy.pojo.bo.*;
+import com.example.zlyy.common.R;
 
 public interface QuestionnaireService {
     R updateQuestionnaire(
-            UserInfo userInfo, 
+            QUserInfo QUserInfo, 
             QuestionA questionA, 
             QuestionB questionB, 
             QuestionC questionC, 
