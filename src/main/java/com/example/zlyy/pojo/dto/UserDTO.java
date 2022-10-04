@@ -39,10 +39,10 @@ public class UserDTO implements Serializable {
     @NonNull
     private String phoneNumber;
 
-    @JsonIgnore
+//    @JsonIgnore
     private String openId;
 
-    @JsonIgnore
+//    @JsonIgnore
     private String wxUnionId;
     
     // dto 拓展属性

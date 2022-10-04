@@ -1,12 +1,12 @@
 package com.example.zlyy.mapper;
 
-import com.example.zlyy.dto.PatientDTO;
+import com.example.zlyy.pojo.Patient;
 
 import java.util.List;
 import java.util.Map;
 
-public interface PatientDTOMapper {
-    boolean insert(PatientDTO patientDTO);
+public interface PatientMapper {
+    boolean insert(Patient patient);
 
     List<Map<String, Object>> selectAll();
 }

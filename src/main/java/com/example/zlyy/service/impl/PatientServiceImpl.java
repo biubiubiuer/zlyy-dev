@@ -1,12 +1,13 @@
 package com.example.zlyy.service.impl;
 
+import com.example.zlyy.mapper.PatientMapper;
 import com.example.zlyy.pojo.Patient;
 import com.example.zlyy.common.R;
-import com.example.zlyy.mapper.PatientMapper;
 import com.example.zlyy.service.PatientService;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +27,9 @@ public class PatientServiceImpl implements PatientService {
     @Resource
     PatientMapper patientMapper;
 
+//    @Resource
+//    private StringRedisTemplate stringRedisTemplate;
+    
     @Transactional(rollbackFor= SQLException.class)
     @Override
     public boolean submitPatientInfo(Patient patient, String time) {

@@ -24,7 +24,7 @@ public class PatientInfoController {
     @Resource
     private PatientService patientService;
 
-    @NoAuth
+
     @PostMapping(value = "/list", produces={"application/json;charset=UTF-8"})
     public R getAllPatients() {
         return patientService.getPatientListByName();

@@ -48,6 +48,9 @@ if [ $? -ne 0 ]; then
     echo 'export PATH=$PATH:$MAVEN_HOME/bin' | sudo tee -a /etc/profile
     
     sudo tar -zxvf  apache-maven-3.8.6-bin.tar.gz -C /usr/local/
+    
+    sudo mv /usr/local/apache-maven-3.8.6/conf/settings.xml /usr/local/apache-maven-3.8.6/conf/settings.xml.bak
+    sudo cp settiings.xml /usr/local/apache-maven-3.8.6/conf/
  
 fi
 

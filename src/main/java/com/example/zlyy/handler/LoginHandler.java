@@ -4,9 +4,12 @@ import com.alibaba.fastjson.JSON;
 import com.example.zlyy.annotation.NoAuth;
 import com.example.zlyy.common.R;
 import com.example.zlyy.pojo.dto.UserDTO;
-import com.example.zlyy.mapper.RedisMapper;
 import com.example.zlyy.util.JWTUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -16,17 +19,26 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+import static com.example.zlyy.util.RedisConstants.TOKEN;
 import static com.example.zlyy.util.RedisConstants.TOKEN_KEY;
 import static com.example.zlyy.util.StringConstants.TOKEN_PREFIX;
 
+@Slf4j
 @Component
 public class LoginHandler implements HandlerInterceptor {
+    
+    Logger logger = LoggerFactory.getLogger(LoginHandler.class);
 
+//    @Resource
+//    private RedisMapper redisMapper;
+    
     @Resource
-    private RedisMapper redisMapper;
-
+    private StringRedisTemplate stringRedisTemplate;
+    
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        
+        
 
         if (!(handler instanceof HandlerMethod)){
             return true;
@@ -38,15 +50,22 @@ public class LoginHandler implements HandlerInterceptor {
 
         String token = request.getHeader("Authorization");
         if (StringUtils.isBlank(token)){
+            logger.error("token is blank");
             return noLoginResponse(response);
         }
         token = token.replace(TOKEN_PREFIX, "");
         boolean verify = JWTUtils.verify(token);
         if (!verify){
+            logger.error("token varify error: {}", token);
             return noLoginResponse(response);
         }
-        String userJson = redisMapper.get(TOKEN_KEY + token);
+//        String userJson = redisMapper.get(TOKEN_KEY + token);
+        String userJson = stringRedisTemplate.opsForValue().get(TOKEN + token);
+        
+        logger.debug("userJson: {}", userJson);
+        
         if (StringUtils.isBlank(userJson)){
+            logger.error("user json is blank");
             return noLoginResponse(response);
         }
         UserDTO userDTO = JSON.parseObject(userJson, UserDTO.class);

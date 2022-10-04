@@ -2,7 +2,6 @@ package com.example.zlyy.service.impl;
 
 import com.example.zlyy.common.R;
 import com.example.zlyy.handler.UserThreadLocal;
-import com.example.zlyy.mapper.RedisMapper;
 import com.example.zlyy.pojo.bo.BloodBiochemistry;
 import com.example.zlyy.pojo.bo.Poop;
 import com.example.zlyy.pojo.bo.Urine;
@@ -15,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -34,8 +34,11 @@ public class ScreeningServiceImpl implements ScreeningService {
     
     Logger logger = LoggerFactory.getLogger(ScreeningServiceImpl.class);
     
+//    @Resource
+//    private RedisMapper redisMapper;
+    
     @Resource
-    private RedisMapper redisMapper;
+    private StringRedisTemplate stringRedisTemplate;
 
 
     Integer[] inputList_1 = initializeInputList(QUES_KEYS_1.length);
@@ -96,8 +99,9 @@ public class ScreeningServiceImpl implements ScreeningService {
         // TODO: openId, way1: redis and userthredlocal
         UserDTO userDTO = UserThreadLocal.get();
         String token = JWTUtils.sign(userDTO.getId());
-        redisMapper.set(TOKEN_KEY + token + REDIS_INFIX[0], biochemicalIndicatorsStr);
-
+//        redisMapper.set(TOKEN_KEY + token + REDIS_INFIX[0], biochemicalIndicatorsStr);
+        stringRedisTemplate.opsForValue().set(TOKEN_KEY + token + REDIS_INFIX[0], biochemicalIndicatorsStr);
+        
         return R.ok();
         
     }

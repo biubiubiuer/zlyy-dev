@@ -2,7 +2,6 @@ package com.example.zlyy.service.impl;
 
 import com.example.zlyy.handler.UserThreadLocal;
 import com.example.zlyy.mapper.PatientMapper;
-import com.example.zlyy.mapper.RedisMapper;
 import com.example.zlyy.pojo.bo.*;
 import com.example.zlyy.common.R;
 import com.example.zlyy.pojo.dto.UserDTO;
@@ -16,6 +15,7 @@ import org.apache.commons.lang.StringUtils;
 import org.dmg.pmml.FieldName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -45,8 +45,11 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     @Resource
     private PatientMapper patientMapper;
     
+//    @Resource
+//    private RedisMapper redisMapper;
+    
     @Resource
-    private RedisMapper redisMapper;
+    private StringRedisTemplate stringRedisTemplate;
     
     Integer[] inputList = initializeInputList();
 
@@ -206,9 +209,10 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
             UserDTO userDTO = UserThreadLocal.get();
             String token = JWTUtils.sign(userDTO.getId());
 
-            if (StringUtils.isNotBlank(token) && redisMapper.keyIsExists(TOKEN_KEY + token + REDIS_INFIX[0])) {
-
-                String biochemicalIndicatorsStr = redisMapper.get(TOKEN_KEY + token + REDIS_INFIX[0]);
+//            if (StringUtils.isNotBlank(token) && redisMapper.keyIsExists(TOKEN_KEY + token + REDIS_INFIX[0])) {
+            if (StringUtils.isNotBlank(token) && stringRedisTemplate.hasKey(TOKEN_KEY + token + REDIS_INFIX[0])) {
+//                String biochemicalIndicatorsStr = redisMapper.get(TOKEN_KEY + token + REDIS_INFIX[0]);
+                String biochemicalIndicatorsStr = stringRedisTemplate.opsForValue().get(TOKEN_KEY + token + REDIS_INFIX[0]);
                 biochemicalIndicatorsStr += ",";
                 String[] split = biochemicalIndicatorsStr.split(",");
                 int[] array = Arrays.asList(split).stream().mapToInt(Integer::parseInt).toArray();

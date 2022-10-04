@@ -1,5 +1,7 @@
 server:
   port: 443
+  tomcat:
+    max-http-header-size: 8192
   ssl:
     key-store: classpath:biubiubiuer_zlyy-dev_xyz.jks
     key-store-password: OzhNIrN9727hO9I6
