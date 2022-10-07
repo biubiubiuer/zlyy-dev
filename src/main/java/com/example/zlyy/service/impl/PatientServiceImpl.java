@@ -116,6 +116,10 @@ public class PatientServiceImpl implements PatientService {
             value.add(val);
         }
         
+        for (int i = 0; i < dateList.size(); i++) {
+            dateList.set(i, dateList.get(i).substring(3, 5));
+        }
+        
         return R.ok().put("value", value).put("name", dateList);
 
     }

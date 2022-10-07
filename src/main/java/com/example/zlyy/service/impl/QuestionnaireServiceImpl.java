@@ -237,10 +237,15 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
                 
                 // TODO: map -> str -> redis -> mysql
 
-                NumberFormat format = NumberFormat.getPercentInstance();
-                format.setMaximumFractionDigits(2);
-                String modelRes = format.format(Double.valueOf(clf.predictProba(waitPreSample).toString().substring(3, 7)));
-                logger.debug("modelRes: {}", modelRes);
+//                NumberFormat format = NumberFormat.getPercentInstance();
+//                format.setMaximumFractionDigits(2);
+//                String modelRes = format.format(Double.valueOf(clf.predictProba(waitPreSample).toString().substring(3, 7)));
+//                logger.debug("modelRes: {}", modelRes);
+
+
+                String modelRes = clf.predictProba(waitPreSample).toString().substring(3, 6);
+                
+
 
 //                String substring = clf.predictProba(waitPreSample).toString().substring(3, 9);
 //                logger.debug("substring: {}", substring);

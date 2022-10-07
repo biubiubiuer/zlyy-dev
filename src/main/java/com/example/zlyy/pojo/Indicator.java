@@ -2,6 +2,7 @@ package com.example.zlyy.pojo;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -9,7 +10,8 @@ import java.io.Serializable;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class WxUserInfo implements Serializable {
+@TableName("tb_indicator")
+public class Indicator implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -18,18 +20,7 @@ public class WxUserInfo implements Serializable {
     
     private String openId;
     
-    private String nickname;
+    private String wxUnionId;
     
-    private String gender;
-    
-    private String city;
-    
-    private String province;
-    
-    private String country;
-    
-    private String avatarUrl;
-    
-    private String unionId;
-    
+    private String biochemicalIndicatorsStr;
 }
