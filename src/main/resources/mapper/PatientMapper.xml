@@ -6,21 +6,21 @@
 
     <insert id="insert" parameterType="com.example.zlyy.pojo.Patient">
         INSERT INTO 
-            tb_patient (`name`, sex, birth_year, nation, height, weight, blood_type, address, id_card, stm_poss, `time`)
+            tb_patient (`name`, sex, phone_number, birth_year, nation, height, weight, blood_type, address, id_card, stm_poss, `time`)
         VALUES 
-            (#{name}, #{sex}, #{birthYear}, #{nation}, #{height}, #{weight}, #{bloodType}, #{address}, #{idCard}, #{stmPoss}, #{time})
-           
-
+            (#{name}, #{sex}, #{phoneNumber}, #{birthYear}, #{nation}, #{height}, #{weight}, #{bloodType}, #{address}, #{idCard}, #{stmPoss}, #{time})
     </insert>
     
     
-    <select id="selectAll" resultType="java.util.Map">
-        SELECT
-            `name`, sex, birth_year, nation, height, weight, blood_type, address, id_card, stm_poss, `time`
-        FROM 
-            tb_patient
-        ORDER BY `time` DESC
+    <select id="selectAllPatients" resultType="java.util.Map">
 
-
+        select
+            a.`name`, a.sex, a.phone_number, a.birth_year, a.nation, a.height, a.weight, a.blood_type, a.address, a.id_card, a.stm_poss, a.`time`
+        from 
+            (
+            select * from tb_patient where id in 
+                                           (select max(id) from tb_patient group by `name`)
+            ) a
+        
     </select>
 </mapper>

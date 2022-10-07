@@ -6,6 +6,6 @@ import com.example.zlyy.pojo.bo.Poop;
 import com.example.zlyy.pojo.bo.Urine;
 import com.example.zlyy.pojo.bo.WholeBlood;
 
-public interface ScreeningService {
+public interface IndicatorService {
     R updateBiochemicalIndicators(BloodBiochemistry bloodBiochemistry, WholeBlood wholeBlood, Poop poop, Urine urine);
 }

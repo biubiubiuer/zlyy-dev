@@ -1,12 +1,13 @@
 package com.example.zlyy.controller;
 
 import com.example.zlyy.annotation.MultiRequestBody;
+import com.example.zlyy.annotation.NotAdmin;
 import com.example.zlyy.common.R;
 import com.example.zlyy.pojo.bo.BloodBiochemistry;
 import com.example.zlyy.pojo.bo.Poop;
 import com.example.zlyy.pojo.bo.Urine;
 import com.example.zlyy.pojo.bo.WholeBlood;
-import com.example.zlyy.service.ScreeningService;
+import com.example.zlyy.service.IndicatorService;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,21 +22,22 @@ import javax.annotation.Resource;
 @RestController
 @RequestMapping("/screen")
 @ResponseBody
-public class ScreeningController {
+public class IndicatorController {
     
-    private static final Logger logger = LoggerFactory.getLogger(ScreeningController.class);
+    private static final Logger logger = LoggerFactory.getLogger(IndicatorController.class);
     
     @Resource
-    private ScreeningService screeningService;
+    private IndicatorService indicatorService;
 
     @PostMapping(value = "/update", produces={"application/json;charset=UTF-8"})
     @ResponseBody
+    @NotAdmin
     public R saveQuestionnaire(
             @MultiRequestBody BloodBiochemistry bloodBiochemistry, 
             @MultiRequestBody WholeBlood wholeBlood, 
             @MultiRequestBody Poop poop, 
             @MultiRequestBody Urine urine) {
-        return screeningService.updateBiochemicalIndicators(bloodBiochemistry, wholeBlood, poop, urine);
+        return indicatorService.updateBiochemicalIndicators(bloodBiochemistry, wholeBlood, poop, urine);
     }
     
 }

@@ -7,12 +7,14 @@ import com.example.zlyy.common.Question;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.io.Serializable;
 
 @Getter
 @Setter
 @EqualsAndHashCode(callSuper = false)
+@ToString()
 //@Accessors(chain = true)
 public class QuestionE extends Question implements Serializable {
 

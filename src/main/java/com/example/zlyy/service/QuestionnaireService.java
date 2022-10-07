@@ -5,7 +5,7 @@ import com.example.zlyy.common.R;
 
 public interface QuestionnaireService {
     R updateQuestionnaire(
-            QUserInfo QUserInfo, 
+            QUserInfo qUserInfo, 
             QuestionA questionA, 
             QuestionB questionB, 
             QuestionC questionC, 

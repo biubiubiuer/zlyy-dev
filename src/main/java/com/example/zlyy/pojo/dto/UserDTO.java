@@ -1,6 +1,6 @@
 package com.example.zlyy.pojo.dto;
 
-import com.example.zlyy.pojo.WxUserInfo;
+import com.example.zlyy.pojo.bo.WxUserInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -39,10 +39,10 @@ public class UserDTO implements Serializable {
     @NonNull
     private String phoneNumber;
 
-//    @JsonIgnore
+    @JsonIgnore
     private String openId;
 
-//    @JsonIgnore
+    @JsonIgnore
     private String wxUnionId;
     
     // dto 拓展属性

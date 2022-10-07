@@ -9,8 +9,7 @@ public class RedisConstants {
     
     public static final String TOKEN = "token:";
     
-    public static final String[] REDIS_INFIX = 
-            {":infix_0:", ":infix_1:", ":infix_2:", ":infix_3:", ":infix_4:"};
+    public static final String OPENID = "openid:";
     
     
 }

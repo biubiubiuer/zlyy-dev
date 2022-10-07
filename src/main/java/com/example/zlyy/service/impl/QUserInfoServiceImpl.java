@@ -20,16 +20,16 @@ public class QUserInfoServiceImpl extends ServiceImpl<QUserInfoMapper, QUserInfo
     private static final Logger logger = LoggerFactory.getLogger(QUserInfoServiceImpl.class);
 
     @Override
-    public void getInfoThenSetPatient(QUserInfo QUserInfo, Patient patient) {
+    public void getInfoThenSetPatient(QUserInfo qUserInfo, Patient patient) {
 
         try {
-            patient.setName(QUserInfo.getName());
-            patient.setSex("1".equals(QuestionUtils.removeSpace(QUserInfo.getSex())) ? "女" : "男");
-            patient.setBirthYear(QuestionUtils.removeSpace(QUserInfo.getBirthYear()));
-            patient.setNation(PatientUtil.parseNation(QuestionUtils.removeSpace(QUserInfo.getNation())));
-            patient.setAddress(PatientUtil.parseAddress(QuestionUtils.removeSpace(QUserInfo.getAddress())));
-            patient.setIdCard(QuestionUtils.removeSpace(QUserInfo.getIdCard()));
-            patient.setStmPoss(QuestionUtils.removeSpace(QUserInfo.getStmPoss()));
+            patient.setName(qUserInfo.getName());
+            patient.setSex("1".equals(QuestionUtils.removeSpace(qUserInfo.getSex())) ? "女" : "男");
+            patient.setPhoneNumber(QuestionUtils.removeSpace(qUserInfo.getPhoneNumber()));
+            patient.setBirthYear(QuestionUtils.removeSpace(qUserInfo.getBirthYear()));
+            patient.setNation(PatientUtil.parseNation(QuestionUtils.removeSpace(qUserInfo.getNation())));
+            patient.setAddress(PatientUtil.parseAddress(QuestionUtils.removeSpace(qUserInfo.getAddress())));
+            patient.setIdCard(QuestionUtils.removeSpace(qUserInfo.getIdCard()));
 
         } catch (Exception e) {
             logger.error("json resolve error" + e.getMessage(), e);

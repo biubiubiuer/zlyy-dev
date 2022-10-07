@@ -2,13 +2,14 @@ package com.example.zlyy.service.impl;
 
 import com.example.zlyy.common.R;
 import com.example.zlyy.handler.UserThreadLocal;
+import com.example.zlyy.mapper.IndicatorMapper;
+import com.example.zlyy.pojo.Indicator;
 import com.example.zlyy.pojo.bo.BloodBiochemistry;
 import com.example.zlyy.pojo.bo.Poop;
 import com.example.zlyy.pojo.bo.Urine;
 import com.example.zlyy.pojo.bo.WholeBlood;
 import com.example.zlyy.pojo.dto.UserDTO;
-import com.example.zlyy.service.ScreeningService;
-import com.example.zlyy.util.JWTUtils;
+import com.example.zlyy.service.IndicatorService;
 import com.example.zlyy.util.MyMapBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
@@ -25,20 +26,19 @@ import java.util.Map;
 
 import static com.example.zlyy.util.ArrayConstants.*;
 import static com.example.zlyy.util.QuestionUtils.serveSingleQuestion;
-import static com.example.zlyy.util.RedisConstants.REDIS_INFIX;
-import static com.example.zlyy.util.RedisConstants.TOKEN_KEY;
+import static com.example.zlyy.util.RedisConstants.*;
 
 @Slf4j
 @Service
-public class ScreeningServiceImpl implements ScreeningService {
+public class IndicatorServiceImpl  implements IndicatorService {
     
-    Logger logger = LoggerFactory.getLogger(ScreeningServiceImpl.class);
-    
-//    @Resource
-//    private RedisMapper redisMapper;
+    Logger logger = LoggerFactory.getLogger(IndicatorServiceImpl.class);
     
     @Resource
     private StringRedisTemplate stringRedisTemplate;
+    
+    @Resource
+    private IndicatorMapper indicatorMapper;
 
 
     Integer[] inputList_1 = initializeInputList(QUES_KEYS_1.length);
@@ -98,11 +98,24 @@ public class ScreeningServiceImpl implements ScreeningService {
         
         // TODO: openId, way1: redis and userthredlocal
         UserDTO userDTO = UserThreadLocal.get();
-        String token = JWTUtils.sign(userDTO.getId());
-//        redisMapper.set(TOKEN_KEY + token + REDIS_INFIX[0], biochemicalIndicatorsStr);
-        stringRedisTemplate.opsForValue().set(TOKEN_KEY + token + REDIS_INFIX[0], biochemicalIndicatorsStr);
+        if (userDTO != null && userDTO.getOpenId() != null) {
+            stringRedisTemplate.opsForValue().set(OPENID + userDTO.getOpenId(), biochemicalIndicatorsStr);
+            
+            Indicator indicator = new Indicator();
+            indicator.setOpenId(userDTO.getOpenId());
+            indicator.setWxUnionId(userDTO.getWxUnionId());
+            indicator.setBiochemicalIndicatorsStr(biochemicalIndicatorsStr);
+            
+            // TODO: 持久化到mysql
+            indicatorMapper.saveIndicator(indicator);
+            
+            return R.ok("biochemicalIndicatorsStr set to redis success");
+        } else if (userDTO == null) {
+            return R.ok("userDTO is null");
+        } else {
+            return R.ok("openId is null");
+        }
         
-        return R.ok();
         
     }
 }

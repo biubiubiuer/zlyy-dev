@@ -18,6 +18,7 @@ public class PatientDTO implements Serializable {
     
     private String name;
     private String sex;
+    private String phoneNumber;
     private String birthYear;
     private String nation;
     private String height;
@@ -33,6 +34,7 @@ public class PatientDTO implements Serializable {
     public void from(Patient patient) {
         this.name = patient.getName();
         this.sex = patient.getSex();
+        this.phoneNumber = patient.getPhoneNumber();
         this.birthYear = patient.getBirthYear();
         this.nation = patient.getNation();
         this.height = patient.getHeight();

@@ -52,6 +52,8 @@ public class GetterTest {
                 Method readMethod = descriptor.getReadMethod();
                 String name = descriptor.getName();
                 
+                logger.debug("descriptor.getName(): {}", descriptor.getName());
+                
 //                Method[] methods = template.getClass().getMethods();
 //                for (Method method : methods) {
 //                    logger.debug("method: " + method);

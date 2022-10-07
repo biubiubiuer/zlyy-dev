@@ -6,12 +6,14 @@ import com.example.zlyy.common.Question;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.io.Serializable;
 
 @Getter
 @Setter
 @EqualsAndHashCode(callSuper = false)
+@ToString()
 public class Poop extends Question implements Serializable {
 
     private static final long serialVersionUID = 1L;

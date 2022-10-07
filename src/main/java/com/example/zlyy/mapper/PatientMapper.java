@@ -7,6 +7,7 @@ import java.util.Map;
 
 public interface PatientMapper {
     boolean insert(Patient patient);
-
-    List<Map<String, Object>> selectAll();
+    
+    List<Map<String, Object>> selectAllPatients();
+    
 }

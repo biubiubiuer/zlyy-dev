@@ -8,5 +8,10 @@ public interface PatientService {
     boolean submitPatientInfo(Patient patient, String time);
     
     R getPatientListByName();
-    
+
+    R getWeekPatients();
+
+    R getMonthPatients();
+
+    R getYearPatients();
 }

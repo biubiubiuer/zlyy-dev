@@ -77,7 +77,8 @@ public class QuestionUtils {
         
         Logger logger = LoggerFactory.getLogger(q.getClass());
         
-        if (o != null && Integer.class.isAssignableFrom(o.getClass())) {
+        // TODO: Integer -> String 后, 这里的Integer.class.isAssignableFrom(o.getClass()) 也要改成String
+        if (o != null && String.class.isAssignableFrom(o.getClass())) { 
             String strValue = o.toString().replaceAll(" ", "");
             logger.debug("strValue: {}", strValue);
             if (RegexUtils.isNumberValid(strValue)) {

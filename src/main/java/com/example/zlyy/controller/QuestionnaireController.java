@@ -2,6 +2,7 @@ package com.example.zlyy.controller;
 
 import com.example.zlyy.annotation.MultiRequestBody;
 import com.example.zlyy.annotation.NoAuth;
+import com.example.zlyy.annotation.NotAdmin;
 import com.example.zlyy.pojo.bo.*;
 import com.example.zlyy.common.R;
 import com.example.zlyy.pojo.*;
@@ -42,14 +43,23 @@ public class QuestionnaireController {
     private PatientService patientService;
 
 
-//    @NoAuth
     @PostMapping(value = "/update", produces={"application/json;charset=UTF-8"})
     @ResponseBody
+    @NotAdmin
     public R saveQuestionnaire(
             @MultiRequestBody QUserInfo qUserInfo,
             @MultiRequestBody QuestionA questionA, @MultiRequestBody QuestionB questionB, @MultiRequestBody QuestionC questionC,
             @MultiRequestBody QuestionD questionD, @MultiRequestBody QuestionE questionE, @MultiRequestBody QuestionF questionF,
             @MultiRequestBody MultiOptionQuestion multiOptionQuestion) throws Exception {
+        
+        logger.info("qUserInfo: {},\n " +
+                        "questionA: {},\n questionB: {},\n questionC: {},\n " +
+                        "questionD: {},\n questionE: {},\n questionF: {},\n " +
+                        "multiOptionQuestion: {}", 
+                qUserInfo.toString(), 
+                questionA.toString(), questionB.toString(), questionC.toString(), 
+                questionD.toString(), questionE.toString(), questionF.toString(), 
+                multiOptionQuestion.toString());
 
 
         R r = questionnaireService.updateQuestionnaire(
@@ -58,11 +68,9 @@ public class QuestionnaireController {
         
         if ("success".equals(r.get("msg"))) {
 
-            qUserInfo.setStmPoss(String.valueOf(r.get("modelRes")));
-            
             Patient patient = new Patient();
             
-//            PatientDTO patientDTO = new PatientDTO();
+            patient.setStmPoss(String.valueOf(r.get("modelRes")));
 
             if (getInfoAndQAThenSetPatient(qUserInfo, questionA, patient)) {
                 SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -84,7 +92,8 @@ public class QuestionnaireController {
             questionAService.getQAThenSetPatient(questionA, patient);
             return true;
         } catch (Exception e) {
-            
+            logger.error("getInfoAndQAThenSetPatient failed", e.getMessage());
+            e.printStackTrace();
         }
         
         return false;

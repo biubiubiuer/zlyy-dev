@@ -228,7 +228,7 @@ public class ClassificationModel {
         System.out.println("waitPreSample predictProba result: " + clf.predictProba(waitPreSample).toString());
         NumberFormat format = NumberFormat.getPercentInstance();
         format.setMaximumFractionDigits(2);
-        String str = format.format(Double.valueOf(clf.predictProba(waitPreSample).toString().substring(3, 10)));
+        String str = format.format(Double.valueOf(clf.predictProba(waitPreSample).toString().substring(3, 7)));
         System.out.println(str);
 
     }

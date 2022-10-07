@@ -7,13 +7,14 @@ import com.example.zlyy.common.Question;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import java.io.Serializable;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
+@ToString()
 //@Accessors(chain = true)
-@TableName("tb_")
 // TODO: 大改
 public class QUserInfo extends Question implements Serializable {
 
@@ -24,16 +25,12 @@ public class QUserInfo extends Question implements Serializable {
 
 
     private String name;
+    private String phoneNumber;
     private String sex;
     private String birthYear;
     private String nation;
-    private String height;
-    private String weight;
-    private String bloodType;
     private String address;
+    private String durable;
     private String idCard;
-    private String stmPoss;
-
-    @JsonIgnore
-    private String time;
+    private String hospital;
 }
