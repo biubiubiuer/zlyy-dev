@@ -21,6 +21,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+import static com.alibaba.fastjson.JSONPatch.OperationType.add;
+
 @Slf4j
 @Service
 public class PatientServiceImpl implements PatientService {
@@ -168,13 +170,12 @@ public class PatientServiceImpl implements PatientService {
         }
 
         List<Integer> value = new ArrayList<>();
-
-        for (int i = 0; i < dateList.size(); i += 7) {
+        
+        for (int i = 0; i < 4; i++) {
             int val = 0;
-            for (int j = i; j < 7; j++) {
-                for (Patient patient : patientList) {
-                    logger.info("ptime: {}, dtime: {}", patient.getTime(), dateList.get(j));
-                    if (patient.getTime().equals(dateList.get(i + j))) {
+            for (Patient patient : patientList) {
+                for (int j = 0; j < 7; j++) {
+                    if (patient.getTime().equals(dateList.get(7 * i + j))) {
                         val++;
                     }
                 }
@@ -194,14 +195,124 @@ public class PatientServiceImpl implements PatientService {
     @Override
     public R getYearPatients() {
 
+        List<Map<String, Object>> maps = patientMapper.selectAllPatients();
+
+        if (maps.size() == 0) {
+            return R.error("病患列表为空!");
+        }
+
         List<String> monthList = new ArrayList<>();
-        for (int i = 0; i < 12; i++) {
-            monthList.add(String.valueOf(i));
+        Calendar cal = Calendar.getInstance();
+        //近六个月
+        cal.set(Calendar.MONTH, cal.get(Calendar.MONTH)+1); //要先+1,才能把本月的算进去
+        for(int i=0; i<12; i++){
+            cal.set(Calendar.MONTH, cal.get(Calendar.MONTH)-1); //逐次往前推1个月
+            monthList.add(String.valueOf(cal.get(Calendar.YEAR))
+                    +"-"+ (cal.get(Calendar.MONTH)+1 < 10 ? "0" +
+                    (cal.get(Calendar.MONTH)+1) : (cal.get(Calendar.MONTH)+1)));
         }
+
+        DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+        List<Patient> patientList = new ArrayList<>();
+        for (Map<String, Object> map : maps) {
+            Patient patient = new Patient();
+            for (Map.Entry<String, Object> entry : map.entrySet()) {
+                String key = entry.getKey();
+                switch (key) {
+                    case "name":
+                        patient.setName((String) entry.getValue());
+                        break;
+                    case "sex":
+                        patient.setSex((String) entry.getValue());
+                        break;
+                    case "phone_number":
+                        patient.setPhoneNumber((String) entry.getValue());
+                        break;
+                    case "birth_year":
+                        patient.setBirthYear((String) entry.getValue());
+                        break;
+                    case "nation":
+                        patient.setNation((String) entry.getValue());
+                        break;
+                    case "height":
+                        patient.setHeight((String) entry.getValue());
+                        break;
+                    case "weight":
+                        patient.setWeight((String) entry.getValue());
+                        break;
+                    case "blood_type":
+                        patient.setBloodType((String) entry.getValue());
+                        break;
+                    case "address":
+                        patient.setAddress((String) entry.getValue());
+                        break;
+                    case "id_card":
+                        patient.setIdCard((String) entry.getValue());
+                        break;
+                    case "stm_poss":
+                        patient.setStmPoss((String) entry.getValue());
+                        break;
+                    case "time":
+                        patient.setTime(df.format((LocalDateTime) entry.getValue()).substring(0, 7));
+                        break;
+                    default:
+                        break;
+                }
+            }
+            patientList.add(patient);
+        }
+
         List<Integer> value = new ArrayList<>();
-        for (int i = 0; i < 12; i++) {
-            value.add(i);
+        
+        for (int i = monthList.size() - 1; i >= 0; i--) {
+            int val = 0;
+            for (Patient patient : patientList) {
+                if (patient.getTime().equals(monthList.get(i))) {
+                    val++;
+                }
+            }
+            value.add(val);
         }
-        return R.ok().put("value", value).put("name", monthList);
+        
+        
+        Collections.reverse(monthList);
+        
+        for (int i = 0; i < monthList.size(); i++) {
+            String str = monthList.get(i).substring(5, 7);
+            monthList.set(i, str.charAt(0) == '0' ? str.substring(1, 2) : str);
+        }
+        
+        int start = 0;
+        for (int i = 0; i < monthList.size(); i++) {
+            if ("1".equals(monthList.get(i))) {
+                start = i;
+            }
+        }
+        
+        List<String> newStringList = new ArrayList<>();
+        List<Integer> newIntList = new ArrayList<>();
+        for (int i = start; i < 12; i++) {
+            newIntList.add(value.get(i));
+            newStringList.add(monthList.get(i));
+        }
+        for (int i = 0; i < start; i++) {
+            newIntList.add(value.get(i));
+            newStringList.add(monthList.get(i));
+        }
+        
+
+//        List<String> monthList = new ArrayList<>();
+//        for (int i = 0; i < 12; i++) {
+//            monthList.add(String.valueOf(i));
+//        }
+//        List<Integer> value = new ArrayList<>();
+//        for (int i = 0; i < 12; i++) {
+//            value.add(i);
+//        }
+
+        return R.ok().put("value", newIntList).put("name", newStringList);
+        
+//        return R.ok().put("value", value).put("name", monthList);
     }
 }

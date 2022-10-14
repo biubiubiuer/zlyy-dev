@@ -1,6 +1,7 @@
 package com.example.zlyy.handler;
 
 import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.example.zlyy.annotation.NotAdmin;
 import com.example.zlyy.common.R;
@@ -9,6 +10,7 @@ import com.example.zlyy.mapper.UserMapper;
 import com.example.zlyy.pojo.Admin;
 import com.example.zlyy.pojo.User;
 import com.example.zlyy.pojo.dto.UserDTO;
+import com.example.zlyy.service.AdminService;
 import com.example.zlyy.util.JWTUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
@@ -37,7 +39,7 @@ public class AdminHandler implements HandlerInterceptor {
     private StringRedisTemplate stringRedisTemplate;
 
     @Resource
-    private AdminMapper adminMapper;
+    private AdminService adminService;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -69,11 +71,12 @@ public class AdminHandler implements HandlerInterceptor {
         }
         UserDTO userDTO = JSON.parseObject(userJson, UserDTO.class);
 
-        String openId = userDTO.getOpenId();
-
-        Admin admin = adminMapper.selectOne(Wrappers.<Admin>lambdaQuery().eq(Admin::getOpenId, openId).last("limit 1"));
+        String userOpenId = userDTO.getOpenId();
+        int count = adminService.count(new QueryWrapper<Admin>()
+                .eq("open_id", userOpenId)
+        );
         
-        if (admin == null) {
+        if (count == 0) {
             return noAdminResponse(response);
         }
         

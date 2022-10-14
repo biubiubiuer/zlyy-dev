@@ -78,8 +78,9 @@ public class QuestionUtils {
         Logger logger = LoggerFactory.getLogger(q.getClass());
         
         // TODO: Integer -> String 后, 这里的Integer.class.isAssignableFrom(o.getClass()) 也要改成String
-        if (o != null && String.class.isAssignableFrom(o.getClass())) { 
-            String strValue = o.toString().replaceAll(" ", "");
+        if (null != o && String.class.isAssignableFrom(o.getClass())) { 
+//            String strValue = o.toString().replaceAll(" ", "");
+            String strValue = QuestionUtils.removeSpace((String) o);
             logger.debug("strValue: {}", strValue);
             if (RegexUtils.isNumberValid(strValue)) {
                 intValue = Integer.valueOf(strValue);

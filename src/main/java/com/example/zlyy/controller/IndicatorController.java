@@ -20,7 +20,7 @@ import javax.annotation.Resource;
 
 @Slf4j
 @RestController
-@RequestMapping("/screen")
+@RequestMapping("/indicator")
 @ResponseBody
 public class IndicatorController {
     
@@ -29,13 +29,24 @@ public class IndicatorController {
     @Resource
     private IndicatorService indicatorService;
 
-    @PostMapping(value = "/update", produces={"application/json;charset=UTF-8"})
+    @PostMapping(value = "/save", produces={"application/json;charset=UTF-8"})
     @ResponseBody
     @NotAdmin
-    public R saveQuestionnaire(
+    public R saveIndicator(
             @MultiRequestBody BloodBiochemistry bloodBiochemistry, 
             @MultiRequestBody WholeBlood wholeBlood, 
             @MultiRequestBody Poop poop, 
+            @MultiRequestBody Urine urine) {
+        return indicatorService.saveBiochemicalIndicators(bloodBiochemistry, wholeBlood, poop, urine);
+    }
+
+    @PostMapping(value = "/update", produces={"application/json;charset=UTF-8"})
+    @ResponseBody
+    @NotAdmin
+    public R updateIndicator(
+            @MultiRequestBody BloodBiochemistry bloodBiochemistry,
+            @MultiRequestBody WholeBlood wholeBlood,
+            @MultiRequestBody Poop poop,
             @MultiRequestBody Urine urine) {
         return indicatorService.updateBiochemicalIndicators(bloodBiochemistry, wholeBlood, poop, urine);
     }

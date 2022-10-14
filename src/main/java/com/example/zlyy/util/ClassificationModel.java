@@ -226,11 +226,12 @@ public class ClassificationModel {
 
         System.out.println("waitPreSample predict result: " + clf.predict(waitPreSample).toString());
         System.out.println("waitPreSample predictProba result: " + clf.predictProba(waitPreSample).toString());
-        System.out.println(clf.predictProba(waitPreSample).toString().substring(3, 6));
-        NumberFormat format = NumberFormat.getPercentInstance();
-        format.setMaximumFractionDigits(2);
-        String str = format.format(Double.valueOf(clf.predictProba(waitPreSample).toString().substring(3, 6)));
-        System.out.println(str);
+        System.out.println(clf.predictProba(waitPreSample).toString());
+        System.out.println(clf.predictProba(waitPreSample).toString().substring(12, 17));
+//        NumberFormat format = NumberFormat.getPercentInstance();
+//        format.setMaximumFractionDigits(3);
+//        String str = format.format(Double.valueOf(clf.predictProba(waitPreSample).toString().substring(12, 17)));
+//        System.out.println(str);
 
     }
 

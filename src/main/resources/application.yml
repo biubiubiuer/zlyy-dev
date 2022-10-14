@@ -20,15 +20,15 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
 #    url: jdbc:mysql://175.178.242.121:3336/zlyy?useSSL=false&serverTimezone=UTC
 #    url: jdbc:mysql://127.0.0.1:3306/zlyy?useSSL=false&serverTimezone=UTC
-    url: jdbc:mysql://127.0.0.1:3336/zlyy-dev?useSSL=false&serverTimezone=UTC
+    url: jdbc:mysql://127.0.0.1:3306/zlyy-dev?useSSL=false&serverTimezone=UTC
     
     username: root
-#    password: Asdzxc2222
-    password: zlyy-biubiubiuer
+    password: Asdzxc2222
+#    password: zlyy-biubiubiuer
     
   redis:
     host: 127.0.0.1
-    port: 6399
+    port: 6379
 #    port: 6379
     database: 1
     lettuce:
@@ -37,8 +37,8 @@ spring:
         max-idle: 10
         min-idle: 1
         time-between-eviction-runs: 10s
-    
-    
+    password: Asdzxc2222
+  
   jackson:
     default-property-inclusion: non_null
     

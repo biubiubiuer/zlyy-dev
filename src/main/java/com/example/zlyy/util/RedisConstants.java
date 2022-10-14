@@ -10,6 +10,10 @@ public class RedisConstants {
     public static final String TOKEN = "token:";
     
     public static final String OPENID = "openid:";
+
+    public static final String QUES_INFIX = ":ques_infix:";
+    
+    public static final String INDI_INFIX = ":indi_infix:";
     
     
 }

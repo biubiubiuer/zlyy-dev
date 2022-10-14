@@ -23,4 +23,6 @@ public class Indicator implements Serializable {
     private String wxUnionId;
     
     private String biochemicalIndicatorsStr;
+    
+    private String questionnaireStr;
 }

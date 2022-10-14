@@ -7,6 +7,8 @@
 -- 1. 参数列表
 -- 1.1 token
 local token = ARGV[1]
+-- 1.2 userDTO json
+local json = ARGV[2]
 
 -- 2. 数据 key
 -- 2.1 token key
@@ -18,9 +20,11 @@ local is_exists = redis.call("EXISTS", tokenKey)
 
 if is_exists == 1 then
     redis.call("DEL", tokenKey)
-    return 1
+    -- 3.2 存在, 则续期token
+    redis.call("SETEX", tokenKey, 604800, json)
+    return 2
 else
-    return 0
+    return 1
 end
 
 

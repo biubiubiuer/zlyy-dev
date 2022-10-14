@@ -2,14 +2,19 @@ package com.example.zlyy.service.impl;
 
 import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.service.IService;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.zlyy.common.R;
+import com.example.zlyy.pojo.Admin;
 import com.example.zlyy.pojo.dto.UserDTO;
 import com.example.zlyy.pojo.bo.WXAuth;
 import com.example.zlyy.pojo.User;
 import com.example.zlyy.pojo.bo.WxUserInfo;
 import com.example.zlyy.handler.UserThreadLocal;
 import com.example.zlyy.mapper.UserMapper;
+import com.example.zlyy.service.AdminService;
 import com.example.zlyy.service.UserService;
 import com.example.zlyy.service.WxService;
 import com.example.zlyy.util.AES;
@@ -20,7 +25,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -33,6 +40,7 @@ import javax.crypto.spec.SecretKeySpec;
 
 import java.io.UnsupportedEncodingException;
 import java.security.*;
+import java.util.Collections;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -42,7 +50,7 @@ import static jdk.jfr.internal.instrument.JDKEvents.initialize;
 
 @Slf4j
 @Service
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
     
     Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
     
@@ -52,11 +60,18 @@ public class UserServiceImpl implements UserService {
     @Resource
     private UserMapper userMapper;
     
-//    @Resource
-//    private RedisMapper redisMapper;
+    @Resource
+    private AdminService adminService;
     
     @Resource
     private StringRedisTemplate stringRedisTemplate;
+    
+    private static final DefaultRedisScript<Long> USERINFO_SCRIPT;
+    static {
+        USERINFO_SCRIPT = new DefaultRedisScript<>();
+        USERINFO_SCRIPT.setLocation(new ClassPathResource("userInfo.lua"));
+        USERINFO_SCRIPT.setResultType(Long.class);
+    }
     
     @Value("${wxmini.appid}")
     private String appid;
@@ -106,7 +121,14 @@ public class UserServiceImpl implements UserService {
                 userDTO.setId(user.getId());
                 
                 // TODO: 判断openId是不是管理员, 分开给前端标识
-                
+//                String userOpenId = userDTO.getOpenId();
+//                int count = adminService.count(new QueryWrapper<Admin>()
+//                        .eq("open_id", userOpenId)
+//                );
+//                if (count == 0) {
+//                    
+//                }
+
                 return this.login(userDTO);
             }
         } catch (Exception e) {
@@ -134,9 +156,21 @@ public class UserServiceImpl implements UserService {
             
             String token = JWTUtils.sign(userDTO.getId());
             userDTO.setToken(token);
+
+//            stringRedisTemplate.opsForValue().set(TOKEN + token, JSON.toJSONString(userDTO), 7, TimeUnit.DAYS);
             
-            stringRedisTemplate.opsForValue().set(TOKEN + token, JSON.toJSONString(userDTO), 7, TimeUnit.DAYS);
-            
+            Long result = stringRedisTemplate.execute(
+                    USERINFO_SCRIPT, 
+                    Collections.emptyList(),
+                    token, JSON.toJSONString(userDTO)
+            );
+            int r = result.intValue();
+            if (r == 1) {
+                logger.info("token已过期, userDTO: {}", JSON.toJSONString(userDTO));
+            }
+            if (r == 0) {
+                return R.error("token 续期未知错误");
+            }
             // TODO: 续期模型数据
 
         }
